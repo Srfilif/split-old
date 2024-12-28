@@ -20,37 +20,44 @@ module.exports = {
         }
 
         try {
+            // Responder a la interacción antes de eliminar el canal
+            await interaction.reply({
+                content: 'El canal será nukeado en unos momentos...',
+                ephemeral: true,
+            });
+
             // Clonar el canal actual
             const newChannel = await channel.clone();
             await newChannel.setPosition(channel.position);
 
+            // Crear embed de confirmación
             const embed = new EmbedBuilder()
                 .setColor(16734430)
-                .setTitle("Moderacion - Split BOT")
+                .setTitle('Moderación - Split BOT')
                 .setDescription(`El canal ha sido nukeado por ${interaction.user.username}`)
-                .setImage("https://i.gifer.com/6Ip.gif")
-            .setFooter({ text: `Sistema de Moderacion - Split BOT`, iconURL: interaction.user.displayAvatarURL() })
-
+                .setImage('https://i.gifer.com/6Ip.gif')
+                .setFooter({ text: 'Sistema de Moderación - Split BOT', iconURL: interaction.user.displayAvatarURL() })
                 .setTimestamp();
-
-            // Eliminar el canal original
-            await channel.delete();
 
             // Enviar el embed al nuevo canal
             await newChannel.send({ embeds: [embed] });
 
-            // Confirmar al usuario que el comando se ejecutó correctamente
-            await interaction.reply({ content: 'El canal ha sido nukeado.', ephemeral: true });
-
+            // Eliminar el canal original
+            await channel.delete();
         } catch (error) {
             console.error('Error al nuke el canal:', error);
+
             const embedError = new EmbedBuilder()
                 .setTitle('Error')
                 .setDescription('Hubo un problema al intentar nuke el canal.')
                 .setColor(16734430)
                 .setTimestamp();
 
-            await interaction.reply({ embeds: [embedError], ephemeral: true });
+            try {
+                await interaction.editReply({ embeds: [embedError], ephemeral: true });
+            } catch (editError) {
+                console.error('No se pudo editar la respuesta de interacción:', editError);
+            }
         }
     },
     category: 'Moderación',

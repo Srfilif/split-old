@@ -1,3 +1,4 @@
+require("dotenv").config({ path: "./config/config.env" });
 const {
   Client,
   GatewayIntentBits,
@@ -6,26 +7,36 @@ const {
 } = require("discord.js");
 const fs = require("fs-extra");
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
+    GatewayIntentBits.GuildMessageReactions,
+    GatewayIntentBits.GuildMembers,
+  ],
+});
 
 // Cargar handlers
 const { handleCommands } = require("./handlers/commandHandler");
+const { handleEvents } = require("./handlers/eventHandler");
+
 handleCommands(client);
+handleEvents(client);
 
 client.once("ready", () => {
-  console.log(`Bot conectado como: ${client.user.tag}`);
+  console.log(`Bot conectado como ${client.user.tag}`);
 
-  // Configurar estado con comandos sugeridos
+  // Configurar estado del bot
   client.user.setPresence({
     activities: [
       {
         name: "tus comandos | /help",
         type: ActivityType.Playing,
-        url: "https://example.com", // Puedes colocar un enlace si es Streaming
       },
     ],
     status: "online",
   });
 });
 
-client.login("BOT_TOKEN");
+client.login(process.env.DISCORD_TOKEN);

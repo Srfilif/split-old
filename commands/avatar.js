@@ -30,4 +30,6 @@ module.exports = {
         });
     },
     category: 'Información',
+    usage: '/userinfo [usuario]', // Ejemplo de uso
+
 };
