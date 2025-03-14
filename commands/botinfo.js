@@ -30,6 +30,13 @@ module.exports = {
             linux: 'Linux',
             darwin: 'macOS'
         };
+// Obtén el número total de usuarios únicos en los servidores del bot
+const totalUsuarios = client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0);
+
+// Formatea el número con toLocaleString()
+const totalUsuariosFormateado = totalUsuarios.toLocaleString();
+
+// Muestra el resultado
 
         // Embed personalizado
         const embed = new EmbedBuilder()
@@ -42,11 +49,11 @@ module.exports = {
                 {
                     name: '<:docs:1180170919700873316> General ❯',
                     value: `
-> **<:card:913714070983675904> Nombre del bot:** \`${client.user.tag}\`
+> **🏷️ Nombre del bot:** \`${client.user.tag}\`
 > **📇 Bot ID:** \`${client.user.id}\`
 > **👑 Owner:** \`SrFilif\`
 > **🌐 Servers:** \`${client.guilds.cache.size.toLocaleString()}\` Servers
-> **👥 Usuarios:** \`${client.users.cache.size.toLocaleString()}\` Usuarios
+> **👥 Usuarios:** \`${totalUsuariosFormateado}\` Usuarios
 > **📺 Canales:** \`${client.channels.cache.size.toLocaleString()}\` Canales
 > **📅 Creado:** \`${moment(client.user.createdTimestamp).format('DD/MM/YYYY, h:mm:ss A')}\`
 > **⌛ Hace:** \`${Math.floor((Date.now() - client.user.createdTimestamp) / 86400000)}\` días

@@ -3,23 +3,44 @@ const axios = require('axios');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('meme')
-        .setDescription('Envía un meme aleatorio.'),
+        .setName('chiste')
+        .setDescription('Envía un chiste aleatorio en español.'),
+
     async execute(interaction) {
+        await interaction.deferReply(); // Responde de manera diferida para evitar timeouts
+
         try {
-            const response = await axios.get('https://meme-api.com/gimme');
-            const meme = response.data;
+            const response = await axios.get('https://v2.jokeapi.dev/joke/Any?lang=es');
+            const joke = response.data;
+
+            if (!joke || (!joke.joke && (!joke.setup || !joke.delivery))) {
+                throw new Error('No se pudo obtener un chiste válido.');
+            }
+
+            let jokeText;
+            if (joke.type === 'twopart') {
+                jokeText = `**${joke.setup}**\n\n${joke.delivery}`;
+            } else {
+                jokeText = joke.joke;
+            }
 
             const embed = new EmbedBuilder()
-                .setColor(0x7289da)
-                .setTitle(meme.title)
-                .setImage(meme.url)
-                .setFooter({ text: `Subreddit: ${meme.subreddit}`, iconURL: interaction.user.displayAvatarURL() });
+                .setColor(0x00ff00)
+                .setTitle('😂 ¡Aquí tienes un chiste! 😂')
+                .setDescription(jokeText)
+                .setFooter({ text: `Categoría: ${joke.category}`, iconURL: interaction.user.displayAvatarURL() });
 
-            await interaction.reply({ embeds: [embed] });
+            await interaction.editReply({ embeds: [embed] });
         } catch (error) {
             console.error(error);
-            await interaction.reply({ content: 'No pude obtener un meme en este momento. Intenta de nuevo más tarde.', ephemeral: true });
+            
+            const embedError = new EmbedBuilder()
+                .setColor(0xff0000)
+                .setTitle('❌ Error al obtener un chiste')
+                .setDescription('No pude obtener un chiste en este momento. Intenta de nuevo más tarde.')
+                .setFooter({ text: 'Error en la API', iconURL: interaction.user.displayAvatarURL() });
+
+            await interaction.editReply({ embeds: [embedError] });
         }
     },
 };

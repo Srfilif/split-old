@@ -84,4 +84,5 @@ module.exports = {
         await interaction.reply({ embeds: [embedBanSuccess] });
     },
     category: 'Moderación',
+
 };

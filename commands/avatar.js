@@ -29,6 +29,7 @@ module.exports = {
             ]
         });
     },
+    premium: true,  
     category: 'Información',
     usage: '/userinfo [usuario]', // Ejemplo de uso
 

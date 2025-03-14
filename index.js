@@ -20,6 +20,7 @@ const client = new Client({
 // Cargar handlers
 const { handleCommands } = require("./handlers/commandHandler");
 const { handleEvents } = require("./handlers/eventHandler");
+const { privateCommandHandler } = require('./handlers/privateCommandHandler');
 
 handleCommands(client);
 handleEvents(client);

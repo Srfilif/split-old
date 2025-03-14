@@ -21,18 +21,31 @@ module.exports = {
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     async execute(interaction) {
         const channel = interaction.options.getChannel('channel');
-        const backgroundUrl = interaction.options.getString('backgroundurl') || 'https://i.imgur.com/umLOhA3.png'; // Valor por defecto si no se proporciona
+        const backgroundUrl = interaction.options.getString('backgroundurl') || 'uploads/backgrounds/fondo.jpeg'; // Nueva ruta por defecto
         const texto = interaction.options.getString('texto') || '¡Bienvenido al servidor!'; // Valor por defecto si no se proporciona
 
-        // Guardar configuración en un archivo JSON
         const configPath = path.join(__dirname, '../data/welcomeConfig.json');
-        const configData = {
-            guildId: interaction.guild.id,
+
+        // Leer la configuración existente
+        let configData = {};
+        if (fs.existsSync(configPath)) {
+            try {
+                const rawData = fs.readFileSync(configPath, 'utf8');
+                configData = JSON.parse(rawData);
+            } catch (error) {
+                console.error('Error al leer el archivo JSON:', error);
+                configData = {};
+            }
+        }
+
+        // Actualizar la configuración para este servidor
+        configData[interaction.guild.id] = {
             channelId: channel.id,
             backgroundUrl: backgroundUrl,
             texto: texto,
         };
 
+        // Guardar la configuración actualizada
         fs.writeFileSync(configPath, JSON.stringify(configData, null, 2), 'utf8');
 
         await interaction.reply({

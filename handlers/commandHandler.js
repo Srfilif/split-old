@@ -2,7 +2,6 @@ const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v10');
 const fs = require('fs-extra');
 
-
 const handleCommands = async (client) => {
     const commands = [];
     client.commands = new Map(); // Para almacenar los comandos con sus propiedades
@@ -19,22 +18,52 @@ const handleCommands = async (client) => {
 
     try {
         console.log('Iniciando registro de comandos...');
-        await rest.put(
-            Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.GUILD_ID),
-            { body: commands }
-        );
-        console.log('Comandos registrados exitosamente.');
+
+        // Comandos globales (sin atributo 'private')
+        const globalCommands = commands.filter(command => !command.private);
+        if (globalCommands.length > 0) {
+            await rest.put(
+                Routes.applicationCommands(process.env.CLIENT_ID),
+                { body: globalCommands }
+            );
+            console.log('Comandos globales registrados exitosamente.');
+        }
+
+        // Comandos privados (con atributo 'private' y guild_id)
+        const privateCommands = commands.filter(command => command.private);
+        if (privateCommands.length > 0) {
+            for (const command of privateCommands) {
+                const guildId = command.private; // Guild ID específica del comando
+                await rest.put(
+                    Routes.applicationGuildCommands(process.env.CLIENT_ID, guildId),
+                    { body: [command] }
+                );
+                console.log(`Comando privado registrado en la guild ${guildId} exitosamente.`);
+            }
+        }
+
     } catch (error) {
         console.error('Error al registrar los comandos:', error);
     }
 
-    client.on('interactionCreate', async interaction => {
+    client.on('interactionCreate', async (interaction) => {
         if (!interaction.isCommand()) return;
 
         const command = client.commands.get(interaction.commandName);
         if (!command) return;
 
         try {
+            // Verifica si el comando es privado y si se está ejecutando en la guild correcta
+            if (command.private && interaction.guild.id !== command.private) {
+                const guildName = interaction.guild.name; // Nombre del servidor
+                await interaction.reply({
+                    content: `Este comando es exclusivo de un servidor 🔒.`,
+                    ephemeral: true
+                });
+                return;
+            }
+
+            // Ejecuta el comando si pasa la validación
             await command.execute(interaction);
         } catch (error) {
             console.error(error);

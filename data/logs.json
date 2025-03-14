@@ -1,0 +1,8 @@
+{
+    "guildId1": {
+        "logChannelId": "channelId1"
+    },
+    "guildId2": {
+        "logChannelId": "channelId2"
+    }
+}

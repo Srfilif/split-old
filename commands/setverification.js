@@ -49,13 +49,20 @@ module.exports = {
             verifiedRoleId: verifiedRole.id,
         };
 
-        fs.writeFileSync(configPath, JSON.stringify(configData, null, 2), 'utf8');
+        try {
+            fs.writeFileSync(configPath, JSON.stringify(configData, null, 2), 'utf8');
+        } catch (error) {
+            console.error('Error al guardar la configuración:', error);
+            return interaction.editReply({
+                content: 'No se pudo guardar la configuración. Verifica los permisos de escritura del bot.',
+            });
+        }
 
         // Crear mensaje de verificación
         const embed = new EmbedBuilder()
             .setColor(0x7289da)
             .setTitle('Sistema de Verificación')
-            .setDescription('Reacciona a este mensaje para verificarte y obtener acceso completo al servidor.')
+            .setDescription('Reacciona a este mensaje con ✅ para verificarte y obtener acceso completo al servidor.')
             .setFooter({ text: 'Split BOT - Sistema de Verificación', iconURL: interaction.user.displayAvatarURL() })
             .setTimestamp();
 
