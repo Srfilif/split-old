@@ -1,17 +1,41 @@
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v10');
 const fs = require('fs-extra');
+const path = require('path');
 
 const handleCommands = async (client) => {
     const commands = [];
     client.commands = new Map(); // Para almacenar los comandos con sus propiedades
 
-    const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+    console.log('Leyendo categorías de comandos...');
+    const commandCategories = fs.readdirSync('./commands', { withFileTypes: true })
+        .filter(dirent => dirent.isDirectory())
+        .map(dirent => dirent.name);
 
-    for (const file of commandFiles) {
-        const command = require(`../commands/${file}`);
-        commands.push(command.data.toJSON());
-        client.commands.set(command.data.name, command); // Guarda el comando en el cliente
+    console.log(`Categorías encontradas: ${commandCategories.join(', ')}`);
+
+    for (const category of commandCategories) {
+        const commandFiles = fs.readdirSync(`./commands/${category}`).filter(file => file.endsWith('.js'));
+        console.log(`Comandos encontrados en ${category}: ${commandFiles.join(', ')}`);
+
+        for (const file of commandFiles) {
+            try {
+                const commandPath = path.join(__dirname, `../commands/${category}/${file}`);
+                console.log(`Cargando comando: ${commandPath}`);
+                const command = require(commandPath);
+                
+                if (!command.data || !command.data.name) {
+                    console.warn(`⚠️ El comando [${file}] no tiene 'data' o 'name' definidos. Se omitirá.`);
+                    continue;
+                }
+                
+                commands.push(command.data.toJSON());
+                client.commands.set(command.data.name, command); // Guarda el comando en el cliente
+                console.log(`✅ Comando [${file}] Cargado con Éxito.`);
+            } catch (error) {
+                console.error(`❌ No se pudo cargar el comando [${file}]:`, error);
+            }
+        }
     }
 
     const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
@@ -26,7 +50,7 @@ const handleCommands = async (client) => {
                 Routes.applicationCommands(process.env.CLIENT_ID),
                 { body: globalCommands }
             );
-            console.log('Comandos globales registrados exitosamente.');
+            console.log('✅ Comandos globales registrados exitosamente.');
         }
 
         // Comandos privados (con atributo 'private' y guild_id)
@@ -38,12 +62,11 @@ const handleCommands = async (client) => {
                     Routes.applicationGuildCommands(process.env.CLIENT_ID, guildId),
                     { body: [command] }
                 );
-                console.log(`Comando privado registrado en la guild ${guildId} exitosamente.`);
+                console.log(`✅ Comando privado registrado en la guild ${guildId} exitosamente.`);
             }
         }
-
     } catch (error) {
-        console.error('Error al registrar los comandos:', error);
+        console.error('❌ Error al registrar los comandos:', error);
     }
 
     client.on('interactionCreate', async (interaction) => {
@@ -55,7 +78,6 @@ const handleCommands = async (client) => {
         try {
             // Verifica si el comando es privado y si se está ejecutando en la guild correcta
             if (command.private && interaction.guild.id !== command.private) {
-                const guildName = interaction.guild.name; // Nombre del servidor
                 await interaction.reply({
                     content: `Este comando es exclusivo de un servidor 🔒.`,
                     ephemeral: true
@@ -67,7 +89,7 @@ const handleCommands = async (client) => {
             await command.execute(interaction);
         } catch (error) {
             console.error(error);
-            await interaction.reply({ content: 'Hubo un error al ejecutar este comando.', ephemeral: true });
+            await interaction.reply({ content: '❌ Hubo un error al ejecutar este comando.', ephemeral: true });
         }
     });
 };

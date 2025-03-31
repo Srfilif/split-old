@@ -21,10 +21,10 @@ module.exports = {
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     async execute(interaction) {
         const channel = interaction.options.getChannel('channel');
-        const backgroundUrl = interaction.options.getString('backgroundurl') || 'uploads/backgrounds/fondo.jpeg'; // Nueva ruta por defecto
+        const backgroundUrl = interaction.options.getString('backgroundurl') || 'assets/images/fondo.jpeg'; // Nueva ruta por defecto
         const texto = interaction.options.getString('texto') || '¡Bienvenido al servidor!'; // Valor por defecto si no se proporciona
 
-        const configPath = path.join(__dirname, '../data/welcomeConfig.json');
+        const configPath = path.join(__dirname, '../../data/welcomeConfig.json');
 
         // Leer la configuración existente
         let configData = {};

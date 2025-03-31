@@ -1,47 +1,47 @@
 {
   "1299845196158078986": {
     "channelId": "1324841880281944187",
-    "backgroundUrl": "uploads/backgrounds/fondo.jpeg",
+    "backgroundUrl": "assets/images/fondo.jpeg",
     "texto": "¡Bienvenido al servidor!"
   },
   "928405005646569522": {
     "channelId": "1324828175670317129",
-    "backgroundUrl": "uploads/backgrounds/fondo.jpeg",
+    "backgroundUrl": "assets/images/fondo.jpeg",
     "texto": "¡Bienvenido a Filif Comunity!"
   },
   "1325627312091168890": {
     "channelId": "1325630873902649365",
-    "backgroundUrl": "/uploads/backgrounds/fondo.jpeg",
+    "backgroundUrl": "/assets/images/fondo.jpeg",
     "texto": "Bienvenidos a Doped Hosting"
   },
   "889929781100032000": {
     "channelId": "1325578600375652372",
-    "backgroundUrl": "/uploads/backgrounds/fondo.jpeg",
+    "backgroundUrl": "/assets/images/fondo.jpeg",
     "texto": "¡Bienvenido al servidor!"
   },
   "1138488097978462290": {
     "channelId": "1322656468474007593",
-    "backgroundUrl": "uploads/backgrounds/fondo.jpeg",
+    "backgroundUrl": "assets/images/fondo.jpeg",
     "texto": "¡Bienvenido al servidor!"
   },
   "1326636550435377182": {
     "channelId": "1326636922738704495",
-    "backgroundUrl": "uploads/backgrounds/fondo.jpeg",
+    "backgroundUrl": "assets/images/fondo.jpeg",
     "texto": "¡Bienvenido al servidor!"
   },
   "1294839148724748402": {
     "channelId": "1325950144784367796",
-    "backgroundUrl": "uploads/backgrounds/fondo.jpeg",
+    "backgroundUrl": "assets/images/fondo.jpeg",
     "texto": "¡Bienvenido al servidor!"
   },
   "1327009296285827082": {
     "channelId": "1327011812834541789",
-    "backgroundUrl": "uploads/backgrounds/fondo.jpeg",
+    "backgroundUrl": "assets/images/fondo.jpeg",
     "texto": "¡Bienvenido al servidor!"
   },
   "1263682982338891779": {
     "channelId": "1327443927141449902",
-    "backgroundUrl": "uploads/backgrounds/fondo.jpeg",
+    "backgroundUrl": "assets/images/fondo.jpeg",
     "texto": "¡Bienvenido al servidor!"
   }
 }

@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 
-const dataFile = path.join(__dirname, '../data/kiss.json');
+const dataFile = path.join(__dirname, '../../data/kiss.json');
 
 // Cargar datos de besos
 const loadKisses = () => {
@@ -59,8 +59,8 @@ module.exports = {
 
             const embed = new EmbedBuilder()
                 .setColor(0xff69b4)
-                .setTitle('💋 ¡Beso enviado! 💋')
-                .setDescription(`${sender} ha besado a ${receiver} 💞\nTotal de besos: **${kisses[key]}**`)
+                .setTitle(`**${sender.username}** besó dulcemente a **${receiver.username}** 💋`)
+                .setDescription(`${sender} y ${receiver} se han besado **${kisses[key]}** veces.`)
                 .setImage(imageUrl)
                 .setFooter({ text: '¡Qué romántico! ❤️', iconURL: sender.displayAvatarURL() });
 

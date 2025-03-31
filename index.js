@@ -14,13 +14,14 @@ const client = new Client({
     GatewayIntentBits.MessageContent,
     GatewayIntentBits.GuildMessageReactions,
     GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildBans,
+    GatewayIntentBits.GuildVoiceStates
   ],
 });
 
 // Cargar handlers
 const { handleCommands } = require("./handlers/commandHandler");
 const { handleEvents } = require("./handlers/eventHandler");
-const { privateCommandHandler } = require('./handlers/privateCommandHandler');
 
 handleCommands(client);
 handleEvents(client);

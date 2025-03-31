@@ -31,6 +31,6 @@ module.exports = {
     },
     premium: true,  
     category: 'Información',
-    usage: '/userinfo [usuario]', // Ejemplo de uso
+    usage: '/avatar [usuario]', // Ejemplo de uso
 
 };
